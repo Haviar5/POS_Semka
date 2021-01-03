@@ -165,6 +165,9 @@ int main(int argc, char *argv[])
     //printf("halo3\n");
     //server(15000,1);
     //client(15000,1);
+
+
+    //TESTUJEME
     return 0;
 }
 

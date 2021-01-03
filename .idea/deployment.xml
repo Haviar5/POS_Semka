@@ -2,10 +2,10 @@
 <project version="4">
   <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="frios2 (185e86b3-79fb-4cea-96b7-f2557e0709a2)">
+      <paths name="frios2 (cd22dcaf-546c-4c54-b768-3bcf847e8f92)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.Dm0TjswIyr" local="$PROJECT_DIR$" />
+            <mapping deploy="/tmp/tmp.GW5JGmKiN7" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug" />
