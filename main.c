@@ -11,7 +11,7 @@
 
 int server(int argc, char *argv[]) {
 
-    printf("haloaaaa\n");
+
     int sockfd, newsockfd;
     socklen_t cli_len;
     struct sockaddr_in serv_addr, cli_addr;
@@ -24,11 +24,14 @@ int server(int argc, char *argv[]) {
         return 1;
     }
 
+
     bzero((char*)&serv_addr, sizeof(serv_addr));
+
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(atoi(argv[1]));
-
+    printf("0000\n");
+    serv_addr.sin_port = 15000;
+    printf("1111\n");
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
     {
@@ -44,14 +47,15 @@ int server(int argc, char *argv[]) {
 
     listen(sockfd, 5);
     cli_len = sizeof(cli_addr);
-
+    printf("2222\n");
     newsockfd = accept(sockfd, (struct sockaddr*)&cli_addr, &cli_len);
+    printf("3333\n");
     if (newsockfd < 0)
     {
         perror("ERROR on accept");
         return 3;
     }
-
+    printf("4444\n");
     bzero(buffer,256);
     n = read(newsockfd, buffer, 255);
     if (n < 0)
@@ -146,9 +150,9 @@ int main(int argc, char *argv[])
 {
 
 
-    /*pthread_t tcp_server;
+    pthread_t tcp_server;
 
-    pthread_create(&tcp_server,NULL ,server, 15000);
+    pthread_create(&tcp_server,NULL ,server(15000,1), NULL);
     printf("Hello, World!\n");
     printf("halo1\n");
     pthread_t tcp_client;
@@ -158,8 +162,9 @@ int main(int argc, char *argv[])
     //pthread_join(tcp_server,NULL);
     //pthread_join(tcp_client,NULL);*/
 
-    printf("halo3\n");
-    server(2,15000);
+    //printf("halo3\n");
+    //server(15000,1);
+    //client(15000,1);
     return 0;
 }
 
