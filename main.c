@@ -117,11 +117,11 @@ int main()
 
         if (pthread_create(&hraci[i], NULL, nacuvaj, &newSocket) != 0) {
 
-            printf("nepodarilo sa vytvorit vlakno\n");
+            printf("Nepodarilo sa vytvorit vlakno!\n");
 
         } else {
 
-            printf("vytvoril som vlakno %d\n", i);
+            printf("vVytvoril som vlakno %d!\n", i);
 
         }
 
