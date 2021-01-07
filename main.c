@@ -121,7 +121,7 @@ int main()
 
         } else {
 
-            printf("vVytvoril som vlakno %d!\n", i);
+            printf("Vytvoril som vlakno %d!\n", i);
 
         }
 
