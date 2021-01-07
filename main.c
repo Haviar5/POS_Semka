@@ -8,8 +8,13 @@
 #include "pthread.h"
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <stdbool.h>
+
 char hraciaPlocha[40] = "----------------------------------------";
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+bool vyhodeny = false;
+int pripojenia = 0;
+int pripraveni = 0;
 
 void* nacuvaj(void* args) {
 
@@ -23,28 +28,54 @@ void* nacuvaj(void* args) {
     char znak;
     recv(newsockfd, buffer, 1, 0);
     znak = buffer[0];
+    pripraveni++;
+
+    while (pripojenia != 2 && pripraveni != 2) {
+
+        sleep(3);
+        printf("Cakam na druheho hraca... (%d)\n", pripojenia);
+
+
+    }
 
     while(1) {
         pthread_mutex_lock(&lock);
-        printf("Na tahu je hrac %c\n", znak);
+        printf("Na tahu je hrac %c, pozicia %d\n", znak, poziciaHracaStara);
         a:
         bzero(buffer,256);
 
         recv(newsockfd, buffer, 256, 0);
 
         if (buffer[0] == '1') {
-             hod = rand() % 6+1 ;
-             poziciaHracaNova = poziciaHracaStara + hod;
-             hraciaPlocha[poziciaHracaNova-1] = znak;
-             hraciaPlocha[poziciaHracaStara-1] = '-';
-             poziciaHracaStara = poziciaHracaNova;
-             printf("Hrac hodil: %d\n", hod);
-             bzero(serverSprava,256);
-             serverSprava[0] = hod+'0';
-             send(newsockfd,serverSprava,sizeof(serverSprava),0);
-             bzero(buffer,256);
-             pthread_mutex_unlock(&lock);
-             sleep(3);
+
+            if (vyhodeny) {
+
+                poziciaHracaNova = 0;
+                poziciaHracaStara = 0;
+                vyhodeny = false;
+            }
+
+            hod = rand() % 6+1 ;
+            poziciaHracaNova = poziciaHracaStara + hod;
+
+            if (hraciaPlocha[poziciaHracaNova-1] != '-') {
+
+                vyhodeny = true;
+                printf("Hrac %c vyhodil druheho hraca!\n",znak);
+
+            }
+
+            hraciaPlocha[poziciaHracaNova-1] = znak;
+            hraciaPlocha[poziciaHracaStara-1] = '-';
+            poziciaHracaStara = poziciaHracaNova;
+            printf("Hrac hodil: %d\n", hod);
+
+            bzero(serverSprava,256);
+            serverSprava[0] = hod+'0';
+            send(newsockfd,serverSprava,sizeof(serverSprava),0);
+            bzero(buffer,256);
+            pthread_mutex_unlock(&lock);
+            sleep(3);
         } else if (buffer[0] == '2') {
              printf("Volba 2\n");
              send(newsockfd,hraciaPlocha,sizeof(hraciaPlocha),0);
@@ -62,6 +93,7 @@ void* nacuvaj(void* args) {
 
              printf("Zla volba\n");
              bzero(buffer,256);
+             goto a;
 
          }
 
@@ -76,7 +108,6 @@ int main()
     srand(time(0));
     int sockfd;
     struct sockaddr_in serv_addr;
-
     bzero((char*)&serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
@@ -113,7 +144,13 @@ int main()
 
         newSocket = accept( sockfd, (struct sockaddr*)&cli_addr, &cli_len);
 
-        printf("Pripojenie nadviazane od: %s:%d\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port));
+        if (newSocket > 0) {
+
+            pripojenia++;
+
+        }
+
+        printf("Pripojenie nadviazane od: %s:%d, pripojeni hraci: %d\n",inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), pripojenia);
 
         if (pthread_create(&hraci[i], NULL, nacuvaj, &newSocket) != 0) {
 
