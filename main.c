@@ -1,16 +1,15 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netdb.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <netdb.h>
+#include <pthread.h>
 
-
-
-
-int main() {
-
+int main()
+{
     int sockfd, n;
     struct sockaddr_in serv_addr;
     struct hostent* server;
@@ -33,7 +32,7 @@ int main() {
             (char*)&serv_addr.sin_addr.s_addr,
             server->h_length
     );
-    serv_addr.sin_port = 17458;
+    serv_addr.sin_port = htons(17455);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
@@ -47,31 +46,33 @@ int main() {
         perror("Error connecting to socket");
         return 4;
     }
+    printf("Pripojil som sa na server.\n");
 
-    printf("Please enter a message: ");
-    bzero(buffer,256);
-    fgets(buffer, 255, stdin);
+    bzero(buffer, 256);
+    printf("\n Pleasae enter a sign: ");
+    scanf("%s", &buffer[0]);
+    send(sockfd,buffer,1,0);
 
-    n = write(sockfd, buffer, strlen(buffer));
-    if (n < 0)
-    {
-        perror("Error writing to socket");
-        return 5;
+
+
+    while (1) {
+
+        printf("Send a message : ");
+        scanf("%s", &buffer[0]);
+        send(sockfd, buffer, 256,0);
+
+        if (strcmp(buffer, "3") == 0) {
+            close(sockfd);
+            printf("Odpajam sa zo servera.\n");
+            exit(1);
+
+        }
+        bzero(buffer,256);
+        recv(sockfd,buffer,256,0);
+        printf("Sprava: %s\n",buffer);
+
     }
 
-    bzero(buffer,256);
-    n = read(sockfd, buffer, 255);
-    if (n < 0)
-    {
-        perror("Error reading from socket");
-        return 6;
-    }
 
-    printf("%s\n",buffer);
-    close(sockfd);
-
-
-
+    return 0;
 }
-
-
