@@ -1,0 +1,1 @@
+/usr/bin/cc  -g   CMakeFiles/POS_Semka-Klient.dir/main.c.o  -o POS_Semka-Klient -lpthread 

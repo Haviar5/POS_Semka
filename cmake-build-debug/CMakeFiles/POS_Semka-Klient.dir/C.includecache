@@ -7,13 +7,13 @@
 #IncludeRegexTransform: 
 
 /tmp/tmp.GW5JGmKiN7/main.c
-pthread.h
--
 sys/types.h
 -
 sys/socket.h
 -
 netinet/in.h
+-
+netdb.h
 -
 stdio.h
 -
@@ -23,6 +23,6 @@ string.h
 -
 unistd.h
 -
-netdb.h
+pthread.h
 -
 

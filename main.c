@@ -56,6 +56,9 @@ int main()
 
 
     while (1) {
+        bzero(buffer,256);
+        recv(sockfd,buffer,256,0);
+        printf("%s\n",buffer);
 
         printf("Send a message : ");
         scanf("%s", &buffer[0]);
@@ -67,12 +70,30 @@ int main()
             exit(1);
 
         }
+
+
         bzero(buffer,256);
         recv(sockfd,buffer,256,0);
         printf("Sprava: %s\n",buffer);
+        if (strcmp(buffer, "Vyhral si!") == 0 ) {
+            close(sockfd);
+            printf("Odpajam sa zo servera.\n");
+            exit(1);
+
+        }
+
+        if (strcmp(buffer, "Hra skoncila!") == 0) {
+            /*char *msg = "Koncim!";
+            send(sockfd, msg, strlen(msg) + 1, 0);*/
+
+            close(sockfd);
+            printf("Odpajam sa zo servera.\n");
+            exit(1);
+
+        }
+
 
     }
-
 
     return 0;
 }
