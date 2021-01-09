@@ -60,6 +60,16 @@ int main()
         recv(sockfd,buffer,256,0);
         printf("%s\n",buffer);
 
+/*
+        if (strcmp(buffer, "Prehral si!") == 0) {
+            char *msg = "Koncim!";
+            send(sockfd, msg, strlen(msg) + 1, 0);
+
+            close(sockfd);
+            printf("Odpajam sa zo servera.\n");
+            exit(1);
+
+        }*/
         printf("1-hod\n"
                "2-mapa\n"
                "3-odpojenie\n"
@@ -78,17 +88,9 @@ int main()
         bzero(buffer,256);
         recv(sockfd,buffer,256,0);
         printf("Sprava: %s\n",buffer);
-        if (strcmp(buffer, "Vyhral si!") == 0 ) {
-            close(sockfd);
-            printf("Odpajam sa zo servera.\n");
-            exit(1);
 
-        }
 
-        if (strcmp(buffer, "Prehral si!") == 0) {
-            /*char *msg = "Koncim!";
-            send(sockfd, msg, strlen(msg) + 1, 0);*/
-
+        if (strcmp(buffer, "Vyhral si!") == 0  || strcmp(buffer, "Prehral si!") == 0) {
             close(sockfd);
             printf("Odpajam sa zo servera.\n");
             exit(1);
