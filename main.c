@@ -32,7 +32,7 @@ int main()
             (char*)&serv_addr.sin_addr.s_addr,
             server->h_length
     );
-    serv_addr.sin_port = htons(17455);
+    serv_addr.sin_port = htons(17454);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
@@ -49,7 +49,7 @@ int main()
     printf("Pripojil som sa na server.\n");
 
     bzero(buffer, 256);
-    printf("\n Pleasae enter a sign: ");
+    printf("\n Please enter a sign: ");
     scanf("%s", &buffer[0]);
     send(sockfd,buffer,1,0);
 
@@ -60,7 +60,10 @@ int main()
         recv(sockfd,buffer,256,0);
         printf("%s\n",buffer);
 
-        printf("Send a message : ");
+        printf("1-hod\n"
+               "2-mapa\n"
+               "3-odpojenie\n"
+               "Vyber z moznosti  : ");
         scanf("%s", &buffer[0]);
         send(sockfd, buffer, 256,0);
 
@@ -82,7 +85,7 @@ int main()
 
         }
 
-        if (strcmp(buffer, "Hra skoncila!") == 0) {
+        if (strcmp(buffer, "Prehral si!") == 0) {
             /*char *msg = "Koncim!";
             send(sockfd, msg, strlen(msg) + 1, 0);*/
 
