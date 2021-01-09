@@ -102,7 +102,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Semestralka
+CMAKE_PROJECT_NAME:STATIC=POS_Semka-Klient
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -152,6 +152,18 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // during the make.  This is useful for debugging only. With Visual
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
+
+//Value Computed by CMake
+POS_Semka-Klient_BINARY_DIR:STATIC=/tmp/tmp.GW5JGmKiN7/cmake-build-debug
+
+//Value Computed by CMake
+POS_Semka-Klient_SOURCE_DIR:STATIC=/tmp/tmp.GW5JGmKiN7
+
+//Value Computed by CMake
+POS_Server_BINARY_DIR:STATIC=/tmp/tmp.GW5JGmKiN7/cmake-build-debug
+
+//Value Computed by CMake
+POS_Server_SOURCE_DIR:STATIC=/tmp/tmp.GW5JGmKiN7
 
 //Path to a program.
 ProcessorCount_cmd_getconf:FILEPATH=/usr/bin/getconf
