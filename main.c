@@ -6,11 +6,10 @@
 #include <string.h>
 #include <unistd.h>
 #include "pthread.h"
-#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <stdbool.h>
 
-char hraciaPlocha[15] = "---------------";
+char hraciaPlocha[20] = "--------------------";
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 bool vyhodeny = false;
 int pripojenia = 0;
@@ -19,6 +18,7 @@ bool vitaz = false;
 
 void* nacuvaj(void* args) {
 
+    bool maPanacika = false;
     int poziciaHracaStara = 0;
     int poziciaHracaNova = 0;
     int hod = 0;
@@ -84,55 +84,20 @@ void* nacuvaj(void* args) {
 
         if (buffer[0] == '1') {
 
-
             hod = rand() % 6+1 ;
-            poziciaHracaNova = (poziciaHracaStara + hod);
 
-            if (hraciaPlocha[poziciaHracaNova-1] != '-' && poziciaHracaNova < (sizeof (hraciaPlocha))) {
+            if (poziciaHracaNova == 0) {
 
-                vyhodeny = true;
-                printf("Hrac %c vyhodil druheho hraca!\n",znak);
+                maPanacika = false;
 
-            }
+                if (hod == 6 || hod == 1 || hod == 3) {
 
-            if(poziciaHracaNova > (sizeof (hraciaPlocha))) {
-
-                poziciaHracaNova = poziciaHracaStara;
-                snprintf(msg,256,"Hodil si prilis vela (%d), musis sa trafit do domceka (%d)!", hod, (sizeof (hraciaPlocha) - poziciaHracaStara));
-                printf("Hrac hodil: %d\n", hod);
-                send(newsockfd,msg,strlen(msg)+1,0);
-                pthread_mutex_unlock(&lock);
-                sleep(3);
-                goto b;
-
-            }
-
-            if (poziciaHracaNova == (sizeof (hraciaPlocha))) {
-                printf("Hrac hodil: %d\n", hod);
-                snprintf(msg,256,"Vyhral si!");
-                send(newsockfd,msg,strlen(msg)+1,0);
-                vitaz = true;
-                pthread_mutex_unlock(&lock);
-
-            }
-
-            if (!vitaz) {
-
-                hraciaPlocha[poziciaHracaNova-1] = znak;
-                hraciaPlocha[poziciaHracaStara-1] = '-';
-                poziciaHracaStara = poziciaHracaNova;
-                printf("Hrac hodil: %d\n", hod);
-
-                if (vyhodeny) {
-
-                    snprintf(msg,256,"Hodil si: %d a vyhodil si druheho hraca!",hod);
-                    send(newsockfd,msg,strlen(msg)+1,0);
-                    pthread_mutex_unlock(&lock);
-                    sleep(3);
+                    maPanacika = true;
 
                 } else {
 
-                    snprintf(msg,256,"Hodil si: %d",hod);
+                    printf("Hrac hodil: %d\n", hod);
+                    snprintf(msg,256,"Hodil si zle, na polozenie panacika na plochu potrebujes hodin 1 ,3 alebo 6!");
                     send(newsockfd,msg,strlen(msg)+1,0);
                     pthread_mutex_unlock(&lock);
                     sleep(3);
@@ -140,6 +105,67 @@ void* nacuvaj(void* args) {
                 }
 
             }
+
+            if (maPanacika) {
+
+                poziciaHracaNova = (poziciaHracaStara + hod);
+
+                if (hraciaPlocha[poziciaHracaNova-1] != '-' && poziciaHracaNova < (sizeof (hraciaPlocha))) {
+
+                    vyhodeny = true;
+                    printf("Hrac %c vyhodil druheho hraca!\n",znak);
+
+                }
+
+                if(poziciaHracaNova > (sizeof (hraciaPlocha))) {
+
+                    poziciaHracaNova = poziciaHracaStara;
+                    snprintf(msg,256,"Hodil si prilis vela (%d), musis sa trafit do domceka (%d)!", hod, (sizeof (hraciaPlocha) - poziciaHracaStara));
+                    printf("Hrac hodil: %d\n", hod);
+                    send(newsockfd,msg,strlen(msg)+1,0);
+                    pthread_mutex_unlock(&lock);
+                    sleep(3);
+                    goto b;
+
+                }
+
+                if (poziciaHracaNova == (sizeof (hraciaPlocha))) {
+
+                    printf("Hrac hodil: %d\n", hod);
+                    snprintf(msg,256,"Vyhral si!");
+                    send(newsockfd,msg,strlen(msg)+1,0);
+                    vitaz = true;
+                    pthread_mutex_unlock(&lock);
+
+                }
+
+                if (!vitaz) {
+
+                    hraciaPlocha[poziciaHracaNova-1] = znak;
+                    hraciaPlocha[poziciaHracaStara-1] = '-';
+                    poziciaHracaStara = poziciaHracaNova;
+                    printf("Hrac hodil: %d\n", hod);
+
+                    if (vyhodeny) {
+
+                        snprintf(msg,256,"Hodil si: %d a vyhodil si druheho hraca!",hod);
+                        send(newsockfd,msg,strlen(msg)+1,0);
+                        pthread_mutex_unlock(&lock);
+                        sleep(3);
+
+                    } else {
+
+                        snprintf(msg,256,"Hodil si: %d",hod);
+                        send(newsockfd,msg,strlen(msg)+1,0);
+                        pthread_mutex_unlock(&lock);
+                        sleep(3);
+
+                    }
+
+                }
+
+            }
+
 
 
         } else if (buffer[0] == '2') {
@@ -151,7 +177,6 @@ void* nacuvaj(void* args) {
              goto a;
 
          } else if (buffer[0] == '3') {
-
 
             pthread_mutex_unlock(&lock);
             printf("Pripojenie ukoncene\n");
@@ -169,6 +194,7 @@ void* nacuvaj(void* args) {
          }
 
      }
+
     close(newsockfd);
 
 }
