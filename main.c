@@ -9,7 +9,7 @@
 #include <arpa/inet.h>
 #include <stdbool.h>
 
-char hraciaPlocha[20] = "--------------------";
+char hraciaPlocha[10] = "----------";
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
 bool vyhodeny = false;
 int pripojenia = 0;
@@ -18,6 +18,7 @@ bool vitaz = false;
 
 void* nacuvaj(void* args) {
 
+    int figurkyVCieli = 0;
     bool maPanacika = false;
     int poziciaHracaStara = 0;
     int poziciaHracaNova = 0;
@@ -44,6 +45,8 @@ void* nacuvaj(void* args) {
         pthread_mutex_lock(&lock);
 
         a:
+
+
 
         if (vyhodeny) {
 
@@ -97,7 +100,7 @@ void* nacuvaj(void* args) {
                 } else {
 
                     printf("Hrac hodil: %d\n", hod);
-                    snprintf(msg,256,"Hodil si zle, na polozenie panacika na plochu potrebujes hodin 1 ,3 alebo 6!");
+                    snprintf(msg,256,"Hodil si zle (%d), na polozenie panacika na plochu potrebujes hodit 1 ,3 alebo 6!", hod);
                     send(newsockfd,msg,strlen(msg)+1,0);
                     pthread_mutex_unlock(&lock);
                     sleep(3);
@@ -129,17 +132,39 @@ void* nacuvaj(void* args) {
 
                 }
 
+
+
                 if (poziciaHracaNova == (sizeof (hraciaPlocha))) {
 
-                    printf("Hrac hodil: %d\n", hod);
-                    snprintf(msg,256,"Vyhral si!");
-                    send(newsockfd,msg,strlen(msg)+1,0);
-                    vitaz = true;
-                    pthread_mutex_unlock(&lock);
+                    figurkyVCieli++;
 
-                }
+                    if (figurkyVCieli == 2) {
 
-                if (!vitaz) {
+                        printf("Hrac hodil: %d\n", hod);
+                        snprintf(msg,256,"Vyhral si!");
+                        send(newsockfd,msg,strlen(msg)+1,0);
+                        vitaz = true;
+                        pthread_mutex_unlock(&lock);
+
+                    } else {
+
+                        hraciaPlocha[poziciaHracaStara-1] = '-';
+                        poziciaHracaStara = 0;
+                        poziciaHracaNova = 0;
+
+                        snprintf(msg,256,"Hodil si: %d, panacika si uspecne dopravil do ciela, ostava ti este %d!",hod, (2-figurkyVCieli));
+                        send(newsockfd,msg,strlen(msg)+1,0);
+
+                        pthread_mutex_unlock(&lock);
+                        sleep(3);
+
+                    }
+
+
+
+
+
+                } else if (!vitaz) {
 
                     hraciaPlocha[poziciaHracaNova-1] = znak;
                     hraciaPlocha[poziciaHracaStara-1] = '-';
@@ -165,7 +190,6 @@ void* nacuvaj(void* args) {
                 }
 
             }
-
 
 
         } else if (buffer[0] == '2') {
@@ -202,6 +226,7 @@ void* nacuvaj(void* args) {
 int main()
 {
 
+    //initHeapMonitor();
     srand(time(0));
     int sockfd;
     struct sockaddr_in serv_addr;

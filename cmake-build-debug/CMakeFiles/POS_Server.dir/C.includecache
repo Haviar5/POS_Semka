@@ -7,4 +7,24 @@
 #IncludeRegexTransform: 
 
 /tmp/tmp.7DBt90Xuh6/main.c
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+unistd.h
+-
+pthread.h
+/tmp/tmp.7DBt90Xuh6/pthread.h
+arpa/inet.h
+-
+stdbool.h
+-
 

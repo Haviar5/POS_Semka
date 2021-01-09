@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Semestralka
+# Target rules for targets named POS_Server
 
 # Build rule for target.
-Semestralka: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Semestralka
-.PHONY : Semestralka
+POS_Server: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 POS_Server
+.PHONY : POS_Server
 
 # fast build rule for target.
-Semestralka/fast:
-	$(MAKE) -f CMakeFiles/Semestralka.dir/build.make CMakeFiles/Semestralka.dir/build
-.PHONY : Semestralka/fast
+POS_Server/fast:
+	$(MAKE) -f CMakeFiles/POS_Server.dir/build.make CMakeFiles/POS_Server.dir/build
+.PHONY : POS_Server/fast
 
 main.o: main.c.o
 
@@ -129,7 +129,7 @@ main.o: main.c.o
 
 # target to build an object file
 main.c.o:
-	$(MAKE) -f CMakeFiles/Semestralka.dir/build.make CMakeFiles/Semestralka.dir/main.c.o
+	$(MAKE) -f CMakeFiles/POS_Server.dir/build.make CMakeFiles/POS_Server.dir/main.c.o
 .PHONY : main.c.o
 
 main.i: main.c.i
@@ -138,7 +138,7 @@ main.i: main.c.i
 
 # target to preprocess a source file
 main.c.i:
-	$(MAKE) -f CMakeFiles/Semestralka.dir/build.make CMakeFiles/Semestralka.dir/main.c.i
+	$(MAKE) -f CMakeFiles/POS_Server.dir/build.make CMakeFiles/POS_Server.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -147,7 +147,7 @@ main.s: main.c.s
 
 # target to generate assembly for a file
 main.c.s:
-	$(MAKE) -f CMakeFiles/Semestralka.dir/build.make CMakeFiles/Semestralka.dir/main.c.s
+	$(MAKE) -f CMakeFiles/POS_Server.dir/build.make CMakeFiles/POS_Server.dir/main.c.s
 .PHONY : main.c.s
 
 # Help Target
@@ -158,7 +158,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... Semestralka"
+	@echo "... POS_Server"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

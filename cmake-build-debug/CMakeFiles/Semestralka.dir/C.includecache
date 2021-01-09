@@ -15,10 +15,18 @@ netinet/in.h
 -
 stdio.h
 -
+stdlib.h
+-
 string.h
 -
 unistd.h
 -
-netdb.h
+pthread.h
+/tmp/tmp.7DBt90Xuh6/pthread.h
+netinet/in.h
+-
+arpa/inet.h
+-
+stdbool.h
 -
 

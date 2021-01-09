@@ -1,1 +1,1 @@
-/usr/bin/cc  -g   CMakeFiles/POS_Server.dir/main.c.o  -o POS_Server 
+/usr/bin/cc  -g   CMakeFiles/POS_Server.dir/main.c.o  -o POS_Server -lpthread 
