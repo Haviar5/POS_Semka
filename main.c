@@ -16,7 +16,6 @@ bool vyhodeny = false;
 int pripojenia = 0;
 int pripraveni = 0;
 bool vitaz = false;
-int cicina = 12;
 
 void* nacuvaj(void* args) {
 
@@ -25,7 +24,6 @@ void* nacuvaj(void* args) {
     int hod = 0;
     int newsockfd = *((int*)args);
     char buffer[256];
-    char serverSprava[1];
 
     char znak;
     recv(newsockfd, buffer, 1, 0);
@@ -63,7 +61,6 @@ void* nacuvaj(void* args) {
             bzero(buffer,256);
 
         }
-
 
         printf("Na tahu je hrac %c, pozicia %d\n", znak, poziciaHracaStara);
 
