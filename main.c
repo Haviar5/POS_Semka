@@ -77,7 +77,7 @@ int main()
     //bzero(buffer,256);
     //recv(sockfd, buffer, 256, 0);
     bzero(buffer,256);
-    printf("\nPlease enter a sign: ");
+    printf("\nZadaj pismeno ktore ta bude reprezentovat : ");
     scanf("%s", &buffer[0]);
     send(sockfd, buffer, 1,0);
 
@@ -91,7 +91,7 @@ int main()
 
 
         printf("\n1 - Hod kockou\n 2 - Zobraz plochu\n 3 - Koniec\n");
-        printf("\nPlease enter a message: ");
+        printf("\nVolba: ");
         scanf("%s", &buffer[0]);
         send(sockfd, buffer, 256,0);
 
