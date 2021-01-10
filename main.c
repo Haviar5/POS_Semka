@@ -8,14 +8,39 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#define VELKOST_PLOCHY 40
+
+void vypisPlochu(char plocha[]) {
+
+    printf("→");
+    for (int i = 0; i < 10; ++i) {
+        printf(" %c", plocha[i]);
+    }
+    printf(" ↓");
+    int pocitadlo=10;
+    for(int j=(VELKOST_PLOCHY-1) ;j > VELKOST_PLOCHY-11 ;j--) {
+
+        printf("\n %c                    %c",plocha[j],plocha[pocitadlo]);
+        pocitadlo++;
+    }
+    printf("\n");
+    printf("↑");
+    for (int i = 29; i > 19; --i) {
+        printf(" %c", plocha[i]);
+    }
+    printf(" ←");
+    printf("\n");
+
+
+}
+
 int main()
 {
     int sockfd, n;
     struct sockaddr_in serv_addr;
     struct hostent* server;
-
+    char plocha[VELKOST_PLOCHY];
     char buffer[256];
-
 
 
     server = gethostbyname("frios2.fri.uniza.sk");
@@ -32,6 +57,7 @@ int main()
             (char*)&serv_addr.sin_addr.s_addr,
             server->h_length
     );
+
     serv_addr.sin_port = htons(17454);
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -48,32 +74,24 @@ int main()
     }
     printf("Pripojil som sa na server.\n");
 
-    bzero(buffer, 256);
-    printf("\n Please enter a sign: ");
+    //bzero(buffer,256);
+    //recv(sockfd, buffer, 256, 0);
+    bzero(buffer,256);
+    printf("\nPlease enter a sign: ");
     scanf("%s", &buffer[0]);
-    send(sockfd,buffer,1,0);
-
-
+    send(sockfd, buffer, 1,0);
 
     while (1) {
+
         bzero(buffer,256);
-        recv(sockfd,buffer,256,0);
+        recv(sockfd, buffer, 256, 0);
         printf("%s\n",buffer);
+        bzero(buffer,256);
 
-/*
-        if (strcmp(buffer, "Prehral si!") == 0) {
-            char *msg = "Koncim!";
-            send(sockfd, msg, strlen(msg) + 1, 0);
 
-            close(sockfd);
-            printf("Odpajam sa zo servera.\n");
-            exit(1);
 
-        }*/
-        printf("1-hod\n"
-               "2-mapa\n"
-               "3-odpojenie\n"
-               "Vyber z moznosti  : ");
+        printf("\n1 - Hod kockou\n 2 - Zobraz plochu\n 3 - Koniec\n");
+        printf("\nPlease enter a message: ");
         scanf("%s", &buffer[0]);
         send(sockfd, buffer, 256,0);
 
@@ -84,21 +102,37 @@ int main()
 
         }
 
+        if (strcmp(buffer, "2") == 0) {
 
-        bzero(buffer,256);
-        recv(sockfd,buffer,256,0);
-        printf("Sprava: %s\n",buffer);
+            bzero(plocha,VELKOST_PLOCHY);
+            recv(sockfd, plocha, VELKOST_PLOCHY, 0);
+            vypisPlochu(plocha);
 
+        } else {
 
-        if (strcmp(buffer, "Vyhral si!") == 0  || strcmp(buffer, "Prehral si!") == 0) {
-            close(sockfd);
-            printf("Odpajam sa zo servera.\n");
-            exit(1);
+            bzero(buffer,256);
+            recv(sockfd, buffer, 256, 0);
+            printf("Sprava zo servera: %s\n",buffer);
 
         }
+
+
+
+
+
+        if (strcmp(buffer, "Vyhral si!") == 0 || strcmp(buffer, "Prehral si!") == 0) {
+
+            close(sockfd);
+            printf("Odpajam zo servera, hra skoncila.\n");
+            exit(1);
+
+
+        }
+
 
 
     }
 
     return 0;
 }
+
